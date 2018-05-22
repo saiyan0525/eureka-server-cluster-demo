@@ -1,0 +1,54 @@
+# 默认启用环境
+spring:
+   profiles:
+     active: peer2
+# 在配置文件添加三个英文状态下的短横线即可区分多个环境profiles
+---
+#   peer1配置
+spring:
+   profiles: peer1
+server:
+  port: 8760
+eureka:
+  instance:
+    hostname: peer1
+  client:
+     # 是否将自己注册到Eureka Server，默认为true
+    register-with-eureka: false
+    # 是否从Eureka Server获取注册信息，默认为true
+    fetch-registry: false
+    service-url:
+        defaultZone: http://peer2:8761/eureka/
+---
+#  peer2配置
+spring:
+   profiles:  peer2
+server:
+  port: 8761
+eureka:
+  instance:
+    hostname: peer2
+  client:
+     # 是否将自己注册到Eureka Server，默认为true
+    register-with-eureka: false
+    # 是否从Eureka Server获取注册信息，默认为true
+    fetch-registry: false
+    service-url:
+        defaultZone: http://peer1:8760/eureka/
+
+---
+# dev standalone 配置
+spring:
+   profiles:  dev
+server:
+  port: 8761
+eureka:
+  instance:
+    hostname: localhost
+  client:
+     # 是否将自己注册到Eureka Server，默认为true
+    register-with-eureka: false
+    # 是否从Eureka Server获取注册信息，默认为true
+    fetch-registry: false
+    service-url:
+        defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
